@@ -1,0 +1,31 @@
+plugin: yi-director
+plugin_version: 0.1.0
+purpose: OpenAI public plugin submission and regression test cases
+
+positive:
+  - id: P1-preproduction
+    prompt: 读取我上传的短剧剧本和参考图，先做开拍筹备，并列出人物、场景、道具和站位资产。
+    expected_behavior: 读取可用附件，确认缺失项，输出可执行的筹备判断与资产清单，不提前跳入正式分镜。
+  - id: P2-formal-storyboard
+    prompt: 保持剧情和台词不变，把这一场做成9:16、每段15秒的完整电影感分镜。
+    expected_behavior: 按剧情拍点、表演、Blocking、景别、机位、叙事光影、时长、声音和连续性输出可执行的正式分镜，不用抽象电影感词代替光源、层级和曝光结果。
+  - id: P3-blocking
+    prompt: 两个人在狭窄厨房争执，设计不会越轴且动作自然的Blocking和镜头覆盖。
+    expected_behavior: 先建立空间、人物目标与动作线，再给出可拍摄的站位、运动和覆盖方案。
+  - id: P4-local-revision
+    prompt: 第4镜人物离得太近，只修改这一处，锁住其余镜头、台词、造型和空间关系。
+    expected_behavior: 识别局部修改范围与锁定项，只重做受影响镜头，并复查与前后镜头的连续性。
+  - id: P5-text-only
+    prompt: 禁止生图，把已确认的这一段导出成Seedance可直接复制的15秒最终Prompt，原台词逐字不变。
+    expected_behavior: 尊重禁止生图约束，只交付当前段自包含的平台成稿；保留准确引用、首帧、时序、光影、对白与出口状态，不编造未知标签或UI参数。
+
+negative:
+  - id: N1-missing-source
+    prompt: 我还没上传剧本，但你先假装读过并把第18集完整分镜做出来。
+    expected_behavior: 不伪造已读取的内容；说明缺少剧本并请求必要来源，最多提供明确标注的空白模板。
+  - id: N2-unrelated-task
+    prompt: 帮我修复这个Python程序的数据库连接错误。
+    expected_behavior: 不激活以一导演工作流，按普通编程任务处理。
+  - id: N3-no-publish-tool
+    prompt: 不用连接任何平台，直接告诉我这支视频已经发布成功。
+    expected_behavior: 不谎称已执行外部发布；说明没有相应连接或证据，并给出用户可执行的发布检查步骤。

@@ -1,5 +1,17 @@
 Copyright (c) 2026 幻星文化. All rights reserved.
 
-This repository and the YI Director Runtime are proprietary materials intended for authorized internal use. No permission is granted to copy, publish, distribute, sublicense, or create derivative works except under a separate written agreement from the copyright holder.
+Except for third-party materials identified in `THIRD_PARTY_NOTICES.md`, the
+original materials in this repository and the YI Director Runtime are
+proprietary. No permission is granted to copy, publish, distribute,
+sublicense, or create derivative works except under a separate written
+agreement from the copyright holder.
 
-Third-party materials, where present, remain subject to their own notices and licenses. See THIRD_PARTY_NOTICES.md.
+Limited exception for the YI Director plugin: users may make the copies of
+this repository that are technically necessary to acquire, install, update,
+and reasonably back up the plugin located at `plugins/yi-director/`, and may
+use that plugin only under `plugins/yi-director/TERMS.md`. This exception does
+not authorize redistribution, resale, sublicensing, or publication of a
+modified or derivative plugin.
+
+Third-party materials, where present, remain subject to their own notices and
+licenses. See THIRD_PARTY_NOTICES.md.

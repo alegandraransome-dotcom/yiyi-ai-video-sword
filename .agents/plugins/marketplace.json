@@ -1,0 +1,20 @@
+{
+  "name": "yi-director-marketplace",
+  "interface": {
+    "displayName": "以一导演"
+  },
+  "plugins": [
+    {
+      "name": "yi-director",
+      "source": {
+        "source": "local",
+        "path": "./plugins/yi-director"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Creativity"
+    }
+  ]
+}
