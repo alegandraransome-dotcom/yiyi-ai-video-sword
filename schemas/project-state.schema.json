@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huanxing.example/schemas/yi-project-state-v1.json",
+  "title": "以一项目状态",
+  "type": "object",
+  "required": ["schema_version", "revision", "project_id", "project", "updated_at", "long_term", "entities", "HANDOFF"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "revision": {"type": "integer", "minimum": 0},
+    "project_id": {"type": "string", "format": "uuid"},
+    "project": {"type": "string", "minLength": 1},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "long_term": {
+      "type": "object",
+      "required": ["format", "pipeline", "characters", "locations", "baseline", "world_rules", "frozen_decisions", "protected"],
+      "properties": {
+        "format": {"type": ["string", "null"]},
+        "pipeline": {"type": ["string", "null"]},
+        "characters": {"type": "object"},
+        "locations": {"type": "object"},
+        "baseline": {
+          "type": "object",
+          "properties": {
+            "visual": {"type": ["string", "object", "null"]},
+            "camera": {"type": ["string", "object", "null"]},
+            "lighting": {"type": ["string", "object", "null"]},
+            "sound": {"type": ["string", "object", "null"]}
+          },
+          "additionalProperties": true
+        },
+        "world_rules": {"type": "array"},
+        "frozen_decisions": {"type": "array"},
+        "protected": {"type": "array"}
+      },
+      "additionalProperties": true
+    },
+    "entities": {
+      "description": "显式保存 Base State + Accumulated Changes = Current State。",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["base_state", "accumulated_changes", "current_state"],
+        "properties": {
+          "base_state": {"type": "object"},
+          "accumulated_changes": {"type": "array", "items": {"type": "object"}},
+          "current_state": {"type": "object"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "HANDOFF": {"$ref": "#/$defs/turn_handoff"}
+  },
+  "$defs": {
+    "turn_handoff": {
+      "type": "object",
+      "required": ["POSITION", "STATE", "LOCKS", "PROTECTED", "NEXT", "REREAD"],
+      "properties": {
+        "POSITION": {
+          "description": "当前剧情与制作位置。",
+          "oneOf": [{"type": "string"}, {"type": "object"}]
+        },
+        "STATE": {
+          "description": "当前有效状态；不得用基础资产覆盖。",
+          "type": "object"
+        },
+        "LOCKS": {
+          "type": "array",
+          "items": {"type": ["string", "object"]}
+        },
+        "PROTECTED": {
+          "type": "array",
+          "items": {"type": ["string", "object"]}
+        },
+        "NEXT": {"type": "string"},
+        "REREAD": {
+          "type": "array",
+          "items": {"type": ["string", "object"]}
+        },
+        "REREAD_DEBT": {
+          "type": "array",
+          "items": {"type": ["string", "object"]},
+          "default": []
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

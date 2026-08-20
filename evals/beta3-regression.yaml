@@ -1,0 +1,122 @@
+suite:
+  id: beta3-industrial-absorption
+  version: 1
+  total_score: 20
+  status: internal-blind-pass-external-pending
+  source: archive/beta3/regression-protocol.md
+  isolation: "T1-T3共享状态；T4-T10各自在显式fixture状态中运行，避免隐式串扰。"
+
+cases:
+  - id: T1
+    title: 薇恒筹备可观察性
+    mode: preproduction
+    persona: pair
+    prompt: "新开一个重要双人场景：A刚发现B隐瞒了会改变两人关系的事实。两个人都不想立刻撕破脸。先做剧本统筹与开拍准备，不要写正式分镜。人物资产暂时没有。"
+    assertions:
+      - points: 1
+        require: "输出中可见【薇】和【恒】。"
+      - points: 1
+        require: "薇先判断人物、关系与观看价值；恒回应目标、资产、Blocking与导演落地，二者不复述。"
+
+  - id: T2
+    title: Performance DNA与Transform Don’t Delete
+    mode: directing
+    persona: pair
+    inherits: T1
+    prompt: "补一条人物设定：A平时焦虑时会来回踱步，但这一场A全程被迫坐着。不要把这个习惯删掉，帮我重新做A这场的表演设计。"
+    assertions:
+      - points: 1
+        require: "不强迫A站起来踱步。"
+      - points: 1
+        require: "将焦虑发动机转移成坐姿可观察行为，并给出触发逻辑。"
+
+  - id: T3
+    title: Two Truths与State Inertia
+    mode: continuation
+    persona: pair
+    inherits: T2
+    prompt: "上一场A刚被B羞辱过，这一场A其实还想保护B，但又不想让B发现自己还在乎。继续导演设计。不要把A上一场的状态清零。"
+    assertions:
+      - points: 1
+        require: "保留上一场羞辱后的残留状态。"
+      - points: 1
+        require: "保护B与抵抗暴露在乎同时成立，并落到策略、身体、距离或停顿。"
+
+  - id: T4
+    title: 群体反应波
+    mode: directing
+    persona: pair
+    prompt: "宴会厅里一只水晶杯突然在桌上自己裂开。现场有八九个贵族，但不是所有人都立刻看见。先做这一个事件后的群体反应设计，不要正式分镜。"
+    assertions:
+      - points: 1
+        require: "反应有先后、强弱与可见性差异。"
+      - points: 1
+        require: "包含被他人带动、没看见或因身份克制的不同反应。"
+
+  - id: T5
+    title: 光学双描述
+    mode: directing
+    persona: pair
+    prompt: "A第一次意识到B还在撒谎的反应镜是关键特写。恒可以主动用85mm、T2.0和精确机位，不要因为新规则把mm/T值删掉。给导演设计，不要正式段封装。"
+    assertions:
+      - points: 1
+        require: "保留并合理使用85mm、T2.0与精确机位。"
+      - points: 1
+        require: "同时说明摄影距离、背景压缩或溶解、焦点与纵深的可见结果。"
+
+  - id: T6
+    title: 受控多镜头与连续性
+    mode: directing
+    persona: pair
+    prompt: "做一个8秒动作：A看到门把自己转动，抬眼看门，门外传来一声撞击，A后退半步。你可以决定是一镜到底还是内部切镜，但不要让模型自己随机切。"
+    assertions:
+      - points: 1
+        require: "先作明确Shot Form决定，选择由戏和执行条件决定。"
+      - points: 1
+        require: "位置、门状态、视线、光向与动作进度连续且物理可完成。"
+
+  - id: T7
+    title: Prior Audio Context
+    mode: formal-production
+    persona: pair
+    prompt: "下一镜只拍A的反应。B在画外说：‘You knew.’ B不要出现在画面里。把这一镜正式写出来。"
+    assertions:
+      - points: 1
+        require: "保留B的画外声音，但画面不出现B。"
+      - points: 1
+        require: "A的Listening与Assessment成立，且无多余台词、旁白或错误口型。"
+
+  - id: T8
+    title: 资产路由与反打几何
+    mode: asset-production
+    persona: pair
+    prompt: "现在切到资产工作：我要同一个小型石砌储物间的反打。已锁：主门在北墙，小推车在房间中心偏东，大木桶贴西墙。主视图摄影机在南墙朝北。现在把摄影机移到北墙朝南，先告诉我反打里这些东西应该落在画面什么位置，再给资产生成词。"
+    assertions:
+      - points: 1
+        require: "进入资产适配，不输出正式分镜。"
+      - points: 1
+        require: "基于同一3D母版重新投影，不移动门、推车和木桶的世界坐标。"
+
+  - id: T9
+    title: Surgical Edit
+    mode: asset-production
+    persona: pair
+    fixture_state:
+      active_mode: asset-production
+    prompt: "只改一件事：把小推车再向画面右侧移动一点。门、木桶、墙体、光源、摄影机、材质、调色和其他所有东西不变。"
+    assertions:
+      - points: 1
+        require: "保持资产类型，不升级为重建设计。"
+      - points: 1
+        require: "Patch Scope只改变小推车屏幕位置，并明确其余全部保留。"
+
+  - id: T10
+    title: 反刻板回归
+    mode: directing
+    persona: pair
+    prompt: "新场景开头我就想先要一秒没人出现的走廊空镜，然后人物才进入。构图不要三分法，我想要稳定偏中轴的压迫构图。人物进入后用52mm、T2.8。不要因为工业Skill把这些改掉。先给导演设计。"
+    assertions:
+      - points: 1
+        require: "允许有叙事任务的空镜与稳定中轴构图。"
+      - points: 1
+        require: "保留52mm与T2.8，不强制FOV角度或states-not-transitions。"

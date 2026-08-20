@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://huanxing.example/schemas/yi-wei-report-v1.json",
+  "title": "薇独立首轮冻结报告",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "task_id",
+    "project_id",
+    "system_version",
+    "source_digest",
+    "state_revision",
+    "state_digest",
+    "route_digest",
+    "compilation_digest",
+    "wei_skills",
+    "observations",
+    "flags",
+    "protected_values",
+    "open_questions"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "task_id": {"type": "string", "minLength": 1},
+    "project_id": {"type": "string", "format": "uuid"},
+    "system_version": {"type": "string", "minLength": 1},
+    "source_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "state_revision": {"type": "integer", "minimum": 0},
+    "state_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "route_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "compilation_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "wei_skills": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "observations": {"type": "array", "items": {"type": ["string", "object"]}},
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "content"],
+        "properties": {
+          "code": {"enum": ["WEI-R", "WEI-W", "WEI-K", "WEI-Q"]},
+          "content": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "protected_values": {"type": "array", "items": {"type": ["string", "object"]}},
+    "open_questions": {"type": "array", "items": {"type": ["string", "object"]}}
+  },
+  "additionalProperties": false
+}

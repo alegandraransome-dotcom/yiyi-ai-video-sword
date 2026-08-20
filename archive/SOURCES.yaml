@@ -1,0 +1,37 @@
+format_version: 1
+received: "2026-08-20"
+decision:
+  canonical_runtime: beta3/frozen-monolith.md
+  historical_baseline: beta-r2/runtime.md
+  rationale: "Beta-3 supersedes Beta-R2, contains the second industrial absorption pass, an explicit migration ledger, and the T1-T10 regression protocol. Its behavioral status remains TEST PENDING."
+input_archives:
+  - name: 可以.docx
+    sha256: 0648529399d6eb0ca1dd5f8eeaa1cea442af64a4e8a3f6d0cf680ab09a00b1b8
+    public_distribution: omitted; hash retained for provenance only
+  - name: 正赛.rar
+    sha256: c6ee26f61b21f92bf657d65edb8a312e439e89eae407b784af3f3ec0c92ef589
+    role: Beta-R2 baseline
+  - name: 分支.rar
+    sha256: fd5251eab7c4642af1c786ad1e810dffd6e78631d0e092bacbbc3251db20c714
+    role: Beta-3 canonical candidate
+  - name: 正赛-卡利男孩skill.rar
+    sha256: 733cbfa5b72a91674f9679266768c705c0c559361e2f4d873895bfbf9b45bd7b
+    role: upstream evidence
+  - name: 分支-地狱skill.rar
+    sha256: 6c872a5e06e7a9d0bd2750d22163f8c52e2804fdf9f1ea2077eefa8ffd2794f6
+    role: upstream evidence
+deduplication:
+  conclusion: "The two skill archives differ as RAR containers, but their three extracted Markdown files are byte-identical. The public snapshot retains the MIT-attributed ACTING evidence and non-verbatim placeholders for CINEDANCE/LIRA."
+public_distribution:
+  profile: "clean public history; no private Git objects"
+  excluded:
+    - "Original 可以.docx attachment"
+    - "Original CINEDANCE document"
+    - "Original LIRA document"
+  retained:
+    - "Beta-R2/Beta-3 project-owned baselines"
+    - "ACTING evidence under the upstream MIT License"
+    - "Non-verbatim CINEDANCE/LIRA provenance placeholders"
+missing_evidence:
+  - "Cinema Studio 4.0 production materials referenced by Beta-R2/Beta-3 were not supplied."
+  - "Public provenance and redistribution terms for the supplied CINEDANCE and LIRA documents remain unresolved."

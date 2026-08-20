@@ -1,0 +1,6 @@
+* text=auto eol=lf
+archive/** -text
+*.docx binary
+*.rar binary
+*.yios binary
+*.bundle binary

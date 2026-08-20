@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: python -m pip install -e .
+      - run: python -m unittest discover -s tests -v
+      - run: yi validate .
+
+  release:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python -m pip install -e .
+      - name: Verify tag and derive asset name
+        id: release_meta
+        shell: bash
+        run: |
+          version="$(python -c 'import yaml; print(yaml.safe_load(open("manifest.yaml", encoding="utf-8"))["system"]["version"])')"
+          expected_tag="v${version}"
+          test "${GITHUB_REF_NAME}" = "${expected_tag}"
+          asset="YI_Director_Runtime_v${version}.yios"
+          echo "asset=${asset}" >> "${GITHUB_OUTPUT}"
+      - name: Build and verify release assets
+        env:
+          ASSET: ${{ steps.release_meta.outputs.asset }}
+        run: |
+          yi build . --output "dist/${ASSET}"
+          yi inspect "dist/${ASSET}"
+          (cd dist && sha256sum "${ASSET}" > "${ASSET}.sha256")
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ASSET: ${{ steps.release_meta.outputs.asset }}
+        run: >-
+          gh release create "${{ github.ref_name }}"
+          "dist/${ASSET}"
+          "dist/${ASSET}.sha256"
+          --verify-tag
+          --generate-notes
+          --prerelease

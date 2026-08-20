@@ -1,0 +1,253 @@
+format_version: 1
+
+system:
+  id: yi-director-runtime
+  name: "以一｜薇 × 恒导演运行时"
+  version: "2.0.0-beta.4"
+  status: "beta-test-pending"
+  language: "zh-CN"
+  package_extension: ".yios"
+  runtime_min_version: "2.0.0b4"
+  canonical_source_sha256: "5d2c62c51b8715f368ed02d9a4812da6d5331f3f37fa0c0d20e5ca0194d95904"
+  baseline: "2.0.0-beta.r2"
+
+runtime:
+  accepted_injections:
+    - PROJECT_STATE
+    - CURRENT_SCRIPT
+    - CURRENT_ASSETS
+    - TASK_CONTEXT
+  always_on:
+    shared:
+      - kernel-entry
+      - kernel-routing
+      - project-state
+    pair:
+      - kernel-wei-seed
+      - kernel-heng-seed
+    wei:
+      - kernel-wei-seed
+    heng:
+      - kernel-heng-seed
+  canonical_order_file: runtime/canonical-order.txt
+  state_schema: schemas/project-state.schema.json
+  handoff_schema: schemas/turn-handoff.schema.json
+
+personas:
+  wei:
+    seed: kernel-wei-seed
+    core: persona-wei
+    accepted_injections: []
+  heng:
+    seed: kernel-heng-seed
+    core: persona-heng
+    accepted_injections:
+      - WEI_REPORT
+
+modules:
+  - id: bootstrap
+    path: runtime/bootstrap.md
+    order: 0
+    role: release-bootstrap
+    tags: [release]
+  - id: kernel-entry
+    path: runtime/modules/00-kernel/00-entry.md
+    order: 10
+    role: kernel
+    tags: [always-on, module-00]
+  - id: kernel-wei-seed
+    path: runtime/modules/00-kernel/10-wei-seed.md
+    order: 11
+    role: persona-seed
+    tags: [module-00, wei]
+  - id: kernel-heng-seed
+    path: runtime/modules/00-kernel/20-heng-seed.md
+    order: 12
+    role: persona-seed
+    tags: [module-00, heng]
+  - id: kernel-routing
+    path: runtime/modules/00-kernel/30-routing.md
+    order: 13
+    role: kernel
+    tags: [always-on, module-00, routing, gates]
+  - id: persona-intro
+    path: runtime/modules/01-personas/00-intro.md
+    order: 20
+    role: persona
+    tags: [module-01, shared]
+  - id: persona-wei
+    path: runtime/modules/01-personas/10-wei.md
+    order: 21
+    role: persona
+    tags: [module-01, wei]
+  - id: persona-heng
+    path: runtime/modules/01-personas/20-heng.md
+    order: 22
+    role: persona
+    tags: [module-01, heng]
+  - id: persona-pair
+    path: runtime/modules/01-personas/30-pair.md
+    order: 23
+    role: persona
+    tags: [module-01, shared, taste-firewall]
+  - id: preproduction
+    path: runtime/modules/02-preproduction.md
+    order: 30
+    role: production
+    tags: [module-02, brief, acting]
+  - id: directing-design
+    path: runtime/modules/03-directing-design.md
+    order: 40
+    role: production
+    tags: [module-03, blueprint, acting, optics, sound]
+  - id: execution-continuity
+    path: runtime/modules/04-execution-continuity.md
+    order: 50
+    role: production
+    tags: [module-04, continuity, video-execution]
+  - id: formal-script
+    path: runtime/modules/05-formal-script.md
+    order: 60
+    role: production
+    tags: [module-05, formal-output, video-execution]
+  - id: reread-handoff
+    path: runtime/modules/06-reread-handoff.md
+    order: 70
+    role: recovery
+    tags: [module-06, reread, revision]
+  - id: review-rework
+    path: runtime/modules/07-review-rework.md
+    order: 80
+    role: review
+    tags: [module-07, review, acting]
+  - id: project-state
+    path: runtime/modules/08-project-state.md
+    order: 90
+    role: state
+    tags: [always-on, module-08, handoff]
+  - id: migration-tests
+    path: runtime/modules/09-migration-tests.md
+    order: 100
+    role: maintenance
+    tags: [module-09, maintenance-only]
+  - id: asset-image-adapter
+    path: runtime/modules/10-asset-image-adapter.md
+    order: 110
+    role: adapter
+    tags: [module-10, optional, assets, images]
+
+internal_skills:
+  acting-directing:
+    description: "压力下的行为、表演DNA、倾听、群体反应与表演返工。"
+    loads: [preproduction, directing-design, formal-script, review-rework]
+  video-execution:
+    description: "当前镜头隔离、空间、光学、物理、时序、连续性与正式封装。"
+    loads: [directing-design, execution-continuity, formal-script]
+  asset-production:
+    description: "人物、场景、道具、Blocking、反打与图片局部修改。"
+    loads: [directing-design, execution-continuity, reread-handoff, asset-image-adapter]
+
+runtime_modes:
+  startup:
+    persona: pair
+    loads: []
+  preproduction:
+    persona: pair
+    loads: [persona-intro, persona-wei, persona-heng, persona-pair, preproduction]
+  directing:
+    persona: pair
+    loads: [persona-intro, persona-wei, persona-heng, persona-pair, preproduction, directing-design]
+  formal-production:
+    persona: pair
+    loads: [persona-intro, persona-wei, persona-heng, persona-pair, preproduction, directing-design, execution-continuity, formal-script]
+    forbids: [asset-image-adapter]
+  continuation:
+    persona: pair
+    loads: [persona-intro, persona-wei, persona-heng, persona-pair, reread-handoff]
+  local-revision:
+    persona: pair
+    loads: [persona-intro, persona-wei, persona-heng, persona-pair, directing-design, execution-continuity, formal-script, reread-handoff]
+  review-rework:
+    persona: pair
+    loads: [persona-intro, persona-wei, persona-heng, persona-pair, reread-handoff, review-rework]
+  asset-production:
+    persona: pair
+    loads: [persona-intro, persona-wei, persona-heng, persona-pair, directing-design, execution-continuity, reread-handoff, asset-image-adapter]
+    forbids: [formal-script]
+  wei-first-read:
+    persona: wei
+    loads: [persona-intro, persona-wei, persona-pair, preproduction]
+    forbids: [kernel-heng-seed, persona-heng]
+  heng-decision:
+    persona: heng
+    loads: [persona-intro, persona-heng, persona-pair, preproduction, directing-design, execution-continuity]
+    requires_injections: [PROJECT_STATE, WEI_REPORT]
+    forbids: [kernel-wei-seed, persona-wei]
+  maintenance:
+    persona: pair
+    loads: [persona-intro, persona-wei, persona-heng, persona-pair, preproduction, directing-design, execution-continuity, formal-script, reread-handoff, review-rework, migration-tests, asset-image-adapter]
+  full-runtime:
+    persona: pair
+    exact_source: true
+    loads: [bootstrap, persona-intro, persona-wei, persona-heng, persona-pair, preproduction, directing-design, execution-continuity, formal-script, reread-handoff, review-rework, migration-tests, asset-image-adapter]
+
+routes:
+  - mode: asset-production
+    priority: 100
+    patterns: ["切到资产工作", "资产工作", "生成人物图", "人物资产生成", "场景母版", "道具资产", "Blocking", "站位图", "反打", "换机位", "图片修改", "纹理", "资产重建"]
+  - mode: review-rework
+    priority: 95
+    patterns: ["看片", "成片复看", "返工", "多手", "穿帮", "REPAIR", "REGENERATE"]
+  - mode: continuation
+    priority: 90
+    patterns: ["继续", "接着做", "上一轮"]
+  - mode: local-revision
+    priority: 85
+    patterns: ["改单镜", "只改", "局部修改", "第4镜不行", "这个镜头不行"]
+  - mode: formal-production
+    priority: 80
+    patterns: ["正式做", "正式写", "正式分镜", "完整脚本", "按15秒", "按30秒"]
+  - mode: preproduction
+    priority: 70
+    patterns: ["剧本统筹", "开拍准备", "先讨论", "读剧本", "筹备"]
+  - mode: directing
+    priority: 60
+    patterns: ["以一", "导演设计", "表演设计", "构图", "关键镜头", "镜头设计"]
+
+pipelines:
+  co-directing:
+    passes:
+      - id: wei
+        mode: wei-first-read
+        requires: [PROJECT_STATE]
+        output: WEI_REPORT
+        freeze_output: true
+      - id: heng
+        mode: heng-decision
+        requires: [PROJECT_STATE, WEI_REPORT]
+        output: HENG_DECISION
+
+gates:
+  phase:
+    source: kernel-routing
+    stages: [preproduction, directing, formal-production, review-rework]
+  formal_script:
+    source: formal-script
+  producer:
+    source: preproduction
+
+evals:
+  cases: evals/beta3-regression.yaml
+  source_protocol: archive/beta3/regression-protocol.md
+  pass_score: 20
+
+package:
+  include:
+    - mimetype
+    - manifest.yaml
+    - LICENSE
+    - runtime
+    - schemas
+    - evals
+    - internal-skills
+    - THIRD_PARTY_NOTICES.md

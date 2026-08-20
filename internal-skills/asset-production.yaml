@@ -1,0 +1,23 @@
+id: asset-production
+name: 资产与图像生产
+purpose: 处理人物、场景、道具、Blocking、同场景反打和图片局部修改。
+triggers:
+  - 人物资产
+  - 场景母版
+  - 道具资产
+  - Blocking
+  - 反打与换机位
+  - Surgical Edit
+loads:
+  - directing-design
+  - execution-continuity
+  - reread-handoff
+  - asset-image-adapter
+constraints:
+  - 资产任务不得污染为正式分镜
+  - 同一三维母版只重投影，不搬动物体世界坐标
+  - 局部修改坚持Change Less和Preserve More
+  - 平台路由必须经过Freshness检查
+upstream_evidence:
+  - archive/upstream-skills/lira.md
+  - archive/beta3/migration-ledger.md

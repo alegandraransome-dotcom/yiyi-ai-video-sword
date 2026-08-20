@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "revision": 0,
+  "project_id": "1ec68f5f-c186-4ef7-a728-dfe6dc278b80",
+  "project": "示例项目",
+  "updated_at": "2026-08-20T00:00:00Z",
+  "long_term": {
+    "format": "9:16",
+    "pipeline": "Mixed",
+    "characters": {},
+    "locations": {},
+    "baseline": {
+      "visual": null,
+      "camera": null,
+      "lighting": null,
+      "sound": null
+    },
+    "world_rules": [],
+    "frozen_decisions": [],
+    "protected": []
+  },
+  "entities": {},
+  "HANDOFF": {
+    "POSITION": "尚未开拍",
+    "STATE": {},
+    "LOCKS": [],
+    "PROTECTED": [],
+    "NEXT": "读取剧本并进入统筹",
+    "REREAD": [],
+    "REREAD_DEBT": []
+  }
+}

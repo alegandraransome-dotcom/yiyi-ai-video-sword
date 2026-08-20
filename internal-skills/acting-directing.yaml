@@ -1,0 +1,21 @@
+id: acting-directing
+name: 表演导演
+purpose: 将情绪解释转译为压力下可观察、可执行、可延续的行为。
+triggers:
+  - 人物表演设计
+  - 微表情与眼神
+  - 群体反应
+  - 表演返工
+loads:
+  - preproduction
+  - directing-design
+  - formal-script
+  - review-rework
+constraints:
+  - 不改原台词文字
+  - 不强制固定Beat数量
+  - 不把表演强度变成KPI
+  - Master Profile必须按场景转译，不能逐镜粘贴
+upstream_evidence:
+  - archive/upstream-skills/acting.md
+  - archive/beta3/migration-ledger.md

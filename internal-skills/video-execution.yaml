@@ -1,0 +1,20 @@
+id: video-execution
+name: 视频执行编译
+purpose: 将导演方案编译为当前镜头自包含的空间、光学、物理、时序与连续性事实。
+triggers:
+  - 正式分镜
+  - 高风险动作
+  - 多镜头连续性
+  - 模型Prompt封装
+loads:
+  - directing-design
+  - execution-continuity
+  - formal-script
+constraints:
+  - Current Shot Facts优先于历史描述
+  - 专业mm与T值不可被FOV语言替代
+  - 一镜到底与内部切镜都必须由内容任务决定
+  - 声音继承不自动把画外人物视觉化
+upstream_evidence:
+  - archive/upstream-skills/cinedance.md
+  - archive/beta3/migration-ledger.md
