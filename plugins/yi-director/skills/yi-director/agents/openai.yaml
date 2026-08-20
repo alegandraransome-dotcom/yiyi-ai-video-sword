@@ -1,0 +1,12 @@
+interface:
+  display_name: "以一导演"
+  short_description: "AI真人短剧导演：筹备、光影、分镜、连续性、资产与平台成稿"
+  default_prompt: "使用 $yi-director 读取我上传的剧本与资产，判断当前阶段并继续制作AI真人短剧。"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  brand_color: "#7A1F1F"
+policy:
+  products:
+    - CHAT
+    - CODEX
+  allow_implicit_invocation: true

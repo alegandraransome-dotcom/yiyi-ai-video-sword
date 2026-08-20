@@ -1,0 +1,69 @@
+suite: yi-director-lighting-platform
+version: 1
+status: partial-forward-test-passed
+purpose: Behavioral regression cases for narrative lighting and on-demand platform export
+last_run: 2026-08-20
+passed_cases: [L1-banquet-arc, L2-reverse-world-light, P1-explicit-seedance-export]
+remaining_cases: [L3-material-exposure, L4-causal-light-change, L5-asset-boundary, P2-formal-stays-formal, P3-no-invented-tags, P4-stale-reference-cleanup, P5-ui-prompt-boundary, P6-dialogue-capacity, P7-export-patch-scope]
+result_record: evals/results/2026-08-20-lighting-platform-forward.md
+
+cases:
+  - id: L1-banquet-arc
+    prompt: 保留慈善晚宴现有镜头、旁白和声场，只优化从可见财富到隐形权力的光影。
+    must: [保留正式三栏格式, 有来源光, 曝光层级, 光影叙事弧线]
+    must_not: [改台词, 自动导出平台Prompt, 只写高级电影感]
+
+  - id: L2-reverse-world-light
+    prompt: 同一会议室反打后主光翻边，只修光影，其他全部不变。窗固定在世界东侧。
+    must: [世界光源固定, 反打重新投影, 修改范围锁]
+    must_not: [移动窗户, 改机位, 新增无来源轮廓光]
+
+  - id: L3-material-exposure
+    prompt: 夜宴里黑西装死黑、水晶杯过曝、皮肤油亮，请只修曝光和材质。
+    must: [黑色织物层次, 水晶高光保护, 哑光真实皮肤]
+    must_not: [整体提亮, 磨皮, 重设计场景]
+
+  - id: L4-causal-light-change
+    prompt: 门打开以后走廊冷光进入房间，写清这次光影变化。
+    must: [触发, 发展, 人物与空间响应, 新稳定状态]
+    must_not: [无因闪烁, 只写氛围变化]
+
+  - id: L5-asset-boundary
+    prompt: 为灰棚人物资产写光影，同时说明它不会成为剧情夜景的默认规则。
+    must: [18%中性灰, 平光, 无体积光, 适用范围限定]
+    must_not: [把无轮廓光扩大为剧情通则]
+
+  - id: P1-explicit-seedance-export
+    prompt: 把已确认的第3序导出为Seedance 2.5可直接复制Prompt，只给Prompt，台词逐字不变。
+    must: [当前段隔离, 活动引用, 首帧, 时间块, 光影, 精确台词]
+    must_not: [导演分析, QA报告, 静默改稿]
+
+  - id: P2-formal-stays-formal
+    prompt: 按原模板给我完整正式分镜，不要平台成稿。
+    must: [保留段头, 摄影表演声场三栏]
+    must_not: [压成英文平台模板, 输出UI设置卡]
+
+  - id: P3-no-invented-tags
+    prompt: 导出通用视频Prompt，我没有提供任何@标签。
+    must: [通用自包含Prompt]
+    must_not: [发明tag, 发明参考槽位]
+
+  - id: P4-stale-reference-cleanup
+    prompt: 当前段只有Chloe和Ryan，把上一段Nathan、汽车和@Image9全部清除后导出。
+    must: [仅当前人物与参考, 仍有效状态重写]
+    must_not: [旧角色, 旧道具, 旧tag]
+
+  - id: P5-ui-prompt-boundary
+    prompt: 导出Higgsfield成稿并单独给UI设置卡；当前底层模型未知。
+    must: [Prompt与UI分离, 底层模型标记未确认, 通用成稿回退]
+    must_not: [编造模型, 编造按钮, 假设Seedance语法]
+
+  - id: P6-dialogue-capacity
+    prompt: 英文台词禁止增删改，按每秒约2.5到3.5词检查12秒是否能说完后导出。
+    must: [逐字台词, 词数与时长核算]
+    must_not: [删词压时, 中文台词, 静默改写]
+
+  - id: P7-export-patch-scope
+    prompt: 只重新导出第2序，正式母稿和其他序全部不变。
+    must: [同一Source, 当前段重导出, 保护母稿]
+    must_not: [重写整场, 改镜头, 改台词]

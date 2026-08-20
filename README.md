@@ -2,7 +2,7 @@
 
 这是把原始设计、Beta-R2“正赛”、Beta-3“分支”和经审计的工业能力正式工程化后的单一公开仓库。
 
-当前唯一运行内容主干仍是 **V2.0 Beta-3**；公开分发版本为 **2.0.0-beta.4**，Beta-R2 只保留为历史基线。开发态使用 Markdown + YAML，发布态生成一个可校验、可复现的 `.yios` 单文件包。
+当前唯一运行内容主干仍是 **V2.0 Beta-3**；公开工程分发版本为 **2.0.0-beta.4**，Beta-R2 只保留为历史基线。开发态使用 Markdown + YAML，工程发布态生成一个可校验、可复现的 `.yios` 单文件包。面向 ChatGPT/Codex 用户的独立 Skills 插件从 **0.1.0** 起步；这只是安装与分发层，不把 Beta-3 规则冒充成新的导演内核。
 
 > 当前状态：`RULE INSTALLED / EXTERNAL TEST PENDING`。结构、安全与编译测试已经自动化；一次隔离的内部盲测得到 T1–T10 **20/20**，但还不能替代外部模型、人工导演复核和真实项目长链压力测试。本版本仍是 Beta，不得改称 Final。
 
@@ -26,10 +26,34 @@ internal-skills/              已审计后的表演、视频执行、资产生�
 schemas/                      项目状态、接力和 WEI_REPORT Schema
 src/yi_runtime/               Python 编译器、路由器、状态和打包器
 evals/                        Beta-3 T1–T10 行为回归 fixture
+plugins/yi-director/          可安装的 ChatGPT/Codex 纯 Skills 插件
+.agents/plugins/              GitHub Marketplace 索引
 archive/                      黄金基线与公开来源记录，永不进入正常 Runtime
 tests/                        可离线复现的结构与安全测试
 dist/                         构建产物（不入 Git）
 ```
+
+## 给 ChatGPT/Codex 用户：安装以一导演
+
+插件版适合不使用 Python CLI、只想在对话里制作 AI 短剧的用户。它包含导演 Skill 和随包参考资料，不包含 MCP 服务器，不需要额外的以一账号或 API Key，也不会自行连接发布者服务器。GitHub 只负责分发与更新；安装完成后，日常使用不需要持续联动 GitHub。
+
+先添加本仓库 Marketplace：
+
+```bash
+codex plugin marketplace add alegandraransome-dotcom/yiyi-ai-video-sword --ref main
+```
+
+然后刷新或重新打开 Skills/Plugins 页面，在目录中选择“以一导演”并安装。安装后可直接上传剧本和已有资产，再说“先做开拍筹备”“按 9:16、每段 15 秒做正式分镜”“只优化叙事光影”或“导出平台可直接复制成稿”。
+
+仓库 Marketplace 用于测试和定向分发，不等同于已进入所有用户可见的通用插件目录。通用发布仍需发布者在 OpenAI Platform 完成身份验证、上传 Skills-only 包、审核并点击发布。插件详情见 [`plugins/yi-director/README.md`](plugins/yi-director/README.md)。
+
+仓库维护者可生成只包含插件白名单文件的确定性上传包：
+
+```bash
+python tools/build_chatgpt_plugin.py
+```
+
+输出位于 `dist/yi-director-plugin-0.1.0.zip`，并同时生成 SHA-256 校验文件；`dist/` 继续作为本地构建目录，不提交进 Git。
 
 ## 快速开始
 
@@ -95,6 +119,6 @@ yi compile --mode heng-decision --state .yi-state/project.json \
 
 ## 公开仓库边界
 
-本仓库可以公开查看，但依据根目录 `LICENSE` 属于 proprietary source-available，并不自动授予复制、再分发或商业使用权。权属未解决的 CINEDANCE、LIRA 原文和原始设计附件不进入公开历史；仓库只保留来源占位说明与经审计的内部适配。详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与 [archive/SOURCES.yaml](archive/SOURCES.yaml)。
+本仓库可以公开查看，但依据根目录 `LICENSE` 属于 proprietary source-available，并不自动授予再分发、再许可或修改权。`plugins/yi-director/` 另有一项有限的安装与使用许可，允许用户在遵守插件 [使用条款](plugins/yi-director/TERMS.md) 的前提下制作和商业化自己的音视频成品。权属未解决的 CINEDANCE、LIRA 原文和原始设计附件不进入公开历史；仓库只保留来源占位说明与经审计的内部适配。详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与 [archive/SOURCES.yaml](archive/SOURCES.yaml)。
 
 更详细的设计见 [架构](docs/ARCHITECTURE.md)、[包格式](docs/PACKAGE_FORMAT.md)、[运行协议](docs/RUNTIME_PROTOCOL.md)、[状态模型](docs/STATE_MODEL.md)、[测试说明](docs/TESTING.md) 和 [GitHub 发行清单](docs/GITHUB_RELEASE.md)。
