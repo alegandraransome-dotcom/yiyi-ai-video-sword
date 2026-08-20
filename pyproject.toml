@@ -9,7 +9,7 @@ description = "以一｜薇 × 恒模块化导演运行时、编译器与 .yios 
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["PyYAML>=6.0,<7"]
-authors = [{name = "幻星文化"}]
+authors = [{name = "怕冷的阿钰"}]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Programming Language :: Python :: 3",

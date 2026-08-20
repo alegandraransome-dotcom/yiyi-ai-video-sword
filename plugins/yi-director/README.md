@@ -2,7 +2,8 @@
 
 `yi-director` 是一个纯 Skills 插件，为 AI 真人短剧提供从剧本筹备到成片返工的导演工作流。
 
-- 插件版本：`0.1.0`
+- 插件版本：`0.1.1`
+- 发布者：`怕冷的阿钰`
 - 知识基线：YI Director Runtime Beta-3，并含叙事光影与平台导出增强
 - 外部服务器：无
 - 插件自身要求的额外账号或 API Key：无
@@ -21,13 +22,21 @@
 
 ## 从 GitHub 测试安装
 
-先把本仓库添加为 Marketplace：
+仓库 Marketplace 是测试与定向分发路径，主要面向 ChatGPT 桌面应用和 Codex CLI，不会自动出现在网页端的通用插件目录。先在安装了 Codex CLI 的电脑上添加本仓库：
 
 ```bash
 codex plugin marketplace add alegandraransome-dotcom/yiyi-ai-video-sword --ref main
 ```
 
-然后刷新或重新打开 Skills/Plugins 页面，在目录中选择“以一导演”并安装。仓库版适合测试和定向分发；要让所有 ChatGPT 用户直接从通用插件目录发现，还需要由发布者在 OpenAI Platform 完成身份验证、审核和发布。
+然后在 ChatGPT 桌面应用中重启应用、打开 Plugins Directory、选择本仓库 Marketplace 并安装；或在 Codex CLI 中输入 `/plugins` 安装并开始新会话。普通网页或移动端用户在插件进入通用目录前，应使用下面的 Markdown 直接上传版。要让所有 ChatGPT 用户从通用插件目录发现，还需要由发布者在 OpenAI Platform 完成身份验证、审核和发布。
+
+## 普通 ChatGPT 直接上传
+
+不具备 Skills/Plugins 安装入口的用户，可使用发布包中的 `Yi_Director_Direct_Chat-v0.1.1.md`：把这一份 Markdown 直接拖入普通 ChatGPT 对话，并同时发送：
+
+> 请完整读取附件，把它作为本对话的“以一导演”执行规范。不要总结规范，读取后直接待命。
+
+这种方式只在当前对话中提供导演规则，不会把附件永久安装成 Skill；新开对话时需要重新上传。不要把完整分享 ZIP 直接当作普通聊天附件使用，应先解压并上传其中的 Markdown。
 
 ## 使用方式
 

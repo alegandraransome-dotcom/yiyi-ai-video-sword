@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import stat
 import tempfile
 import zipfile
@@ -43,13 +44,30 @@ PACKAGE_PATHS = (
     "skills/yi-director/references/review-rework.md",
     "skills/yi-director/references/video-platform-export.md",
 )
+SEMVER = re.compile(
+    r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)"
+    r"(?:-(?:(?:0|[1-9]\d*)|(?:\d*[A-Za-z-][0-9A-Za-z-]*))"
+    r"(?:\.(?:(?:0|[1-9]\d*)|(?:\d*[A-Za-z-][0-9A-Za-z-]*)))*)?"
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
+)
+
+
+def validate_plugin_version(value: object) -> str:
+    if not isinstance(value, str):
+        raise ValueError("plugin version must be a string")
+    if len(value) > 64 or SEMVER.fullmatch(value) is None:
+        raise ValueError("plugin version must be a valid SemVer string")
+    return value
+
+
+def plugin_version_from_bytes(content: bytes) -> str:
+    manifest = json.loads(content.decode("utf-8"))
+    return validate_plugin_version(manifest.get("version"))
 
 
 def plugin_version() -> str:
-    manifest = json.loads(
-        (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
-    )
-    return str(manifest["version"])
+    content = (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_bytes()
+    return plugin_version_from_bytes(content)
 
 
 def package_entries() -> list[tuple[str, bytes]]:
@@ -82,7 +100,20 @@ def temporary_path(parent: Path, prefix: str) -> Path:
     return Path(name)
 
 
-def write_zip(output: Path) -> str:
+def validated_entries(
+    entries: list[tuple[str, bytes]] | None = None,
+) -> list[tuple[str, bytes]]:
+    snapshot = package_entries() if entries is None else list(entries)
+    names = [relative for relative, _ in snapshot]
+    if names != list(PACKAGE_PATHS) or len(names) != len(set(names)):
+        raise ValueError("plugin package snapshot does not match the package whitelist")
+    if not all(isinstance(content, bytes) for _, content in snapshot):
+        raise ValueError("plugin package snapshot content must be bytes")
+    return snapshot
+
+
+def write_zip(output: Path, entries: list[tuple[str, bytes]] | None = None) -> str:
+    output = output.resolve()
     try:
         output.relative_to(PLUGIN_ROOT.resolve())
     except ValueError:
@@ -90,7 +121,7 @@ def write_zip(output: Path) -> str:
     else:
         raise ValueError("output ZIP must be outside the plugin package")
 
-    entries = package_entries()
+    snapshot = validated_entries(entries)
     output.parent.mkdir(parents=True, exist_ok=True)
     checksum = output.with_suffix(output.suffix + ".sha256")
     archive_temp = temporary_path(output.parent, f".{output.name}.")
@@ -99,15 +130,14 @@ def write_zip(output: Path) -> str:
         with zipfile.ZipFile(
             archive_temp,
             mode="w",
-            compression=zipfile.ZIP_DEFLATED,
-            compresslevel=9,
+            compression=zipfile.ZIP_STORED,
         ) as archive:
-            for relative, content in entries:
+            for relative, content in snapshot:
                 info = zipfile.ZipInfo(relative, date_time=(1980, 1, 1, 0, 0, 0))
-                info.compress_type = zipfile.ZIP_DEFLATED
+                info.compress_type = zipfile.ZIP_STORED
                 info.external_attr = (stat.S_IFREG | 0o644) << 16
                 info.create_system = 3
-                archive.writestr(info, content, compress_type=zipfile.ZIP_DEFLATED)
+                archive.writestr(info, content, compress_type=zipfile.ZIP_STORED)
 
         digest = hashlib.sha256(archive_temp.read_bytes()).hexdigest()
         checksum_temp.write_text(f"{digest}  {output.name}\n", encoding="utf-8")

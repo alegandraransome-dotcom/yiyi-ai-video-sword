@@ -2,7 +2,7 @@
 
 这是把原始设计、Beta-R2“正赛”、Beta-3“分支”和经审计的工业能力正式工程化后的单一公开仓库。
 
-当前唯一运行内容主干仍是 **V2.0 Beta-3**；公开工程分发版本为 **2.0.0-beta.4**，Beta-R2 只保留为历史基线。开发态使用 Markdown + YAML，工程发布态生成一个可校验、可复现的 `.yios` 单文件包。面向 ChatGPT/Codex 用户的独立 Skills 插件从 **0.1.0** 起步；这只是安装与分发层，不把 Beta-3 规则冒充成新的导演内核。
+当前唯一运行内容主干仍是 **V2.0 Beta-3**；公开工程分发版本为 **2.0.0-beta.4**，Beta-R2 只保留为历史基线。开发态使用 Markdown + YAML，工程发布态生成一个可校验、可复现的 `.yios` 单文件包。面向 ChatGPT/Codex 用户的 Skills 插件与普通聊天直接上传版现为 **0.1.1**；这只是安装与分发层，不把 Beta-3 规则冒充成新的导演内核。
 
 > 当前状态：`RULE INSTALLED / EXTERNAL TEST PENDING`。结构、安全与编译测试已经自动化；一次隔离的内部盲测得到 T1–T10 **20/20**，但还不能替代外部模型、人工导演复核和真实项目长链压力测试。本版本仍是 Beta，不得改称 Final。
 
@@ -33,17 +33,33 @@ tests/                        可离线复现的结构与安全测试
 dist/                         构建产物（不入 Git）
 ```
 
-## 给 ChatGPT/Codex 用户：安装以一导演
+## 给 ChatGPT/Codex 用户：使用以一导演
 
-插件版适合不使用 Python CLI、只想在对话里制作 AI 短剧的用户。它包含导演 Skill 和随包参考资料，不包含 MCP 服务器，不需要额外的以一账号或 API Key，也不会自行连接发布者服务器。GitHub 只负责分发与更新；安装完成后，日常使用不需要持续联动 GitHub。
+发布者为 **怕冷的阿钰**。发布包包含两种用法，二者都不包含 MCP 服务器，不需要额外的以一账号或 API Key，也不会自行连接发布者服务器。
 
-先添加本仓库 Marketplace：
+### 普通 ChatGPT：直接上传单文件
+
+把 `Yi_Director_Direct_Chat-v0.1.1.md` 直接拖入普通 ChatGPT 对话，并同时发送：
+
+> 请完整读取附件，把它作为本对话的“以一导演”执行规范。不要总结规范，读取后直接待命。
+
+这会让 ChatGPT 在当前对话中依据以一规则工作，但不会永久安装 Skill；新开对话时需要重新上传。完整分享 ZIP 供发布者下载、授权分发和留档，使用前应先解压，普通聊天只上传其中的 Markdown。
+
+### 支持 Skills/Plugins：正式安装
+
+仓库 Marketplace 是测试与定向分发路径，主要面向 ChatGPT 桌面应用和 Codex CLI，不会自动出现在网页端的通用插件目录。先在安装了 Codex CLI 的电脑上添加本仓库 Marketplace：
 
 ```bash
 codex plugin marketplace add alegandraransome-dotcom/yiyi-ai-video-sword --ref main
 ```
 
-然后刷新或重新打开 Skills/Plugins 页面，在目录中选择“以一导演”并安装。安装后可直接上传剧本和已有资产，再说“先做开拍筹备”“按 9:16、每段 15 秒做正式分镜”“只优化叙事光影”或“导出平台可直接复制成稿”。
+然后按使用界面继续：
+
+- ChatGPT 桌面应用：重启应用，打开 Plugins Directory，选择本仓库 Marketplace，再安装“以一导演”。
+- Codex CLI：输入 `/plugins`，从已配置的 Marketplace 中安装；安装后开始新会话。
+- 普通网页或移动端用户：在插件进入通用目录前，使用上面的 Markdown 直接上传版。
+
+安装后可直接上传剧本和已有资产，再说“先做开拍筹备”“按 9:16、每段 15 秒做正式分镜”“只优化叙事光影”或“导出平台可直接复制成稿”。
 
 仓库 Marketplace 用于测试和定向分发，不等同于已进入所有用户可见的通用插件目录。通用发布仍需发布者在 OpenAI Platform 完成身份验证、上传 Skills-only 包、审核并点击发布。插件详情见 [`plugins/yi-director/README.md`](plugins/yi-director/README.md)。
 
@@ -53,7 +69,13 @@ codex plugin marketplace add alegandraransome-dotcom/yiyi-ai-video-sword --ref m
 python tools/build_chatgpt_plugin.py
 ```
 
-输出位于 `dist/yi-director-plugin-0.1.0.zip`，并同时生成 SHA-256 校验文件；`dist/` 继续作为本地构建目录，不提交进 Git。
+输出位于 `dist/yi-director-plugin-0.1.1.zip`，并同时生成 SHA-256 校验文件。要同时生成普通聊天单文件和完整分享包：
+
+```bash
+python tools/build_share_pack.py
+```
+
+构建结果包括 `Yi_Director_Direct_Chat-v0.1.1.md`、正式插件 ZIP、`Yi_Director_Share_Pack-v0.1.1.zip` 及校验文件；`dist/` 继续作为本地构建目录，不提交进 Git。
 
 ## 快速开始
 
