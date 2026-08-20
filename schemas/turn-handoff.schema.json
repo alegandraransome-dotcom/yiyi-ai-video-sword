@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huanxing.example/schemas/yi-turn-handoff-v1.json",
+  "$id": "https://yi-director.example/schemas/yi-turn-handoff-v1.json",
   "title": "以一轮次接力",
   "type": "object",
   "required": ["POSITION", "STATE", "LOCKS", "PROTECTED", "NEXT", "REREAD"],

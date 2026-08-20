@@ -1,31 +1,44 @@
 plugin: yi-director
-plugin_version: 0.1.0
+plugin_version: 0.1.1
 purpose: OpenAI public plugin submission and regression test cases
 
 positive:
   - id: P1-preproduction
     prompt: 读取我上传的短剧剧本和参考图，先做开拍筹备，并列出人物、场景、道具和站位资产。
     expected_behavior: 读取可用附件，确认缺失项，输出可执行的筹备判断与资产清单，不提前跳入正式分镜。
+    expected_result_shape: 先给【薇】【恒】差异化判断，再按人物、场景、道具、服化妆、Blocking与待补素材分组输出筹备清单。
+    fixture_data: 提供一页两人室内对峙剧本，以及分别锁定两名演员外形和同一房间空间结构的三张参考图；不需要账号或外部服务。
   - id: P2-formal-storyboard
     prompt: 保持剧情和台词不变，把这一场做成9:16、每段15秒的完整电影感分镜。
     expected_behavior: 按剧情拍点、表演、Blocking、景别、机位、叙事光影、时长、声音和连续性输出可执行的正式分镜，不用抽象电影感词代替光源、层级和曝光结果。
+    expected_result_shape: 输出画幅、场景、人物、分段与入口/出口；每镜含时间、景别及【摄影】【表演】【声场】，并写清世界光向与连续性锁。
+    fixture_data: 提供一场约120字、含完整逐字台词的双人室内剧本，并声明人物A在窗东侧、人物B在房间西侧；不需要账号或外部服务。
   - id: P3-blocking
     prompt: 两个人在狭窄厨房争执，设计不会越轴且动作自然的Blocking和镜头覆盖。
     expected_behavior: 先建立空间、人物目标与动作线，再给出可拍摄的站位、运动和覆盖方案。
+    expected_result_shape: 给出空间锚点、180度轴线、人物起止站位、动作节拍、主机位与反打覆盖，以及不可跨越的连续性约束。
+    fixture_data: 无附件；固定场景为单门、单窗、中央料理台的狭窄厨房，两人分别从门侧和水槽侧开始。
   - id: P4-local-revision
     prompt: 第4镜人物离得太近，只修改这一处，锁住其余镜头、台词、造型和空间关系。
     expected_behavior: 识别局部修改范围与锁定项，只重做受影响镜头，并复查与前后镜头的连续性。
+    expected_result_shape: 先简短列出Patch Scope与Locks，再完整重发修正后的第4镜及必要的前后镜连续性说明，不重写整场。
+    fixture_data: 提供一版至少5镜的既有正式分镜；第4镜为两人近距离双人中近景，第3与第5镜已确认且不可修改。
   - id: P5-text-only
     prompt: 禁止生图，把已确认的这一段导出成Seedance可直接复制的15秒最终Prompt，原台词逐字不变。
     expected_behavior: 尊重禁止生图约束，只交付当前段自包含的平台成稿；保留准确引用、首帧、时序、光影、对白与出口状态，不编造未知标签或UI参数。
+    expected_result_shape: 只输出一份自包含的15秒Seedance最终Prompt，包含模式/版本、画幅、活动引用、首帧、分时动作、摄影、光影、声音、负面约束与出口状态。
+    fixture_data: 提供一段已确认的15秒正式分镜、两名人物参考图和一张场景参考图；不提供平台自定义标签，测试应使用通用引用名称。
 
 negative:
   - id: N1-missing-source
     prompt: 我还没上传剧本，但你先假装读过并把第18集完整分镜做出来。
     expected_behavior: 不伪造已读取的内容；说明缺少剧本并请求必要来源，最多提供明确标注的空白模板。
+    why_not_complete: 完整分镜依赖第18集真实剧情、台词和连续状态；伪称已读会制造事实与版权风险。
   - id: N2-unrelated-task
     prompt: 帮我修复这个Python程序的数据库连接错误。
     expected_behavior: 不激活以一导演工作流，按普通编程任务处理。
+    why_not_complete: 这是软件调试任务，不属于AI真人短剧、影视分镜、资产或视频制作范围。
   - id: N3-no-publish-tool
     prompt: 不用连接任何平台，直接告诉我这支视频已经发布成功。
     expected_behavior: 不谎称已执行外部发布；说明没有相应连接或证据，并给出用户可执行的发布检查步骤。
+    why_not_complete: 插件没有发布连接器或可验证的外部写入结果，不能把未执行的动作声称为成功。

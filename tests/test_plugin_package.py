@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -180,6 +181,11 @@ class PluginPackageTests(unittest.TestCase):
             for case in cases[group]:
                 self.assertTrue(case["prompt"].strip())
                 self.assertTrue(case["expected_behavior"].strip())
+        for case in cases["positive"]:
+            self.assertTrue(case["expected_result_shape"].strip())
+            self.assertTrue(case["fixture_data"].strip())
+        for case in cases["negative"]:
+            self.assertTrue(case["why_not_complete"].strip())
 
     def test_lighting_and_platform_regression_set_is_well_formed(self) -> None:
         suite = yaml.safe_load(
@@ -207,7 +213,7 @@ class PluginPackageTests(unittest.TestCase):
         terms = (PLUGIN / "TERMS.md").read_text(encoding="utf-8")
         notices = (PLUGIN / "THIRD_PARTY_NOTICES.md").read_text(encoding="utf-8")
         self.assertIn("不包含 MCP 服务器", privacy)
-        self.assertIn("安装、更新和运行插件", terms)
+        self.assertIn("安装、上传或使用", terms)
         self.assertIn("MIT License", notices)
         self.assertIn("O-Side Media", notices)
 
@@ -232,6 +238,9 @@ class PluginPackageTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(first.read_bytes()).digest(), hashlib.sha256(second.read_bytes()).digest())
             with zipfile.ZipFile(first) as archive:
                 names = set(archive.namelist())
+                self.assertTrue(
+                    all(info.compress_type == zipfile.ZIP_STORED for info in archive.infolist())
+                )
             self.assertEqual(names, set(plugin_builder.PACKAGE_PATHS))
             self.assertIn(".codex-plugin/plugin.json", names)
             self.assertIn("skills/yi-director/SKILL.md", names)
@@ -239,6 +248,14 @@ class PluginPackageTests(unittest.TestCase):
 
     def test_portal_zip_builder_rejects_self_inclusion(self) -> None:
         output = PLUGIN / ".self-test.zip"
+        self.assertFalse(output.exists())
+
+    def test_portal_zip_builder_rejects_relative_self_inclusion(self) -> None:
+        output = PLUGIN / ".relative-self-test.zip"
+        relative = Path(os.path.relpath(output, Path.cwd()))
+        self.assertFalse(output.exists())
+        with self.assertRaisesRegex(ValueError, "outside the plugin package"):
+            plugin_builder.write_zip(relative)
         self.assertFalse(output.exists())
         process = subprocess.run(
             [
@@ -279,6 +296,21 @@ class PluginPackageTests(unittest.TestCase):
             self.assertNotEqual(process.returncode, 0)
             self.assertIn("unexpected files: .env", process.stderr)
             self.assertEqual(output.read_bytes(), b"known-good-package")
+
+    def test_plugin_version_validation_rejects_unsafe_values(self) -> None:
+        for value in (
+            "../../escaped",
+            "..\\..\\escaped",
+            "1.0",
+            "v1.0.0",
+            "1.0.0\nname",
+            1,
+            None,
+        ):
+            with self.subTest(value=value):
+                with self.assertRaises(ValueError):
+                    plugin_builder.validate_plugin_version(value)
+        self.assertEqual(plugin_builder.validate_plugin_version("0.1.1"), "0.1.1")
 
 
 if __name__ == "__main__":

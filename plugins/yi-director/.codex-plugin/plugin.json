@@ -1,9 +1,9 @@
 {
   "name": "yi-director",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "面向AI真人短剧制作的导演工作流，覆盖剧本筹备、人物表演、Blocking、镜头与叙事光影、正式分镜、15/30秒视频段、平台成稿、连续性、图像资产及成片复看返工。",
   "author": {
-    "name": "幻星文化",
+    "name": "怕冷的阿钰",
     "url": "https://github.com/alegandraransome-dotcom/yiyi-ai-video-sword"
   },
   "homepage": "https://github.com/alegandraransome-dotcom/yiyi-ai-video-sword",
@@ -21,7 +21,7 @@
     "displayName": "以一导演",
     "shortDescription": "AI真人短剧导演工作流",
     "longDescription": "从剧本通读与开拍筹备开始，协助完成演员表演、Blocking、镜头与叙事光影设计、正式分镜、15/30秒视频段、Seedance/Higgsfield等平台的按需成稿导出、空间与动作连续性检查，以及人物、场景、道具、站位图和成片返工。正式分镜保留为可读可审的导演母稿，平台导出不会静默改动剧情、镜头或台词。插件只包含可复用的导演技能与参考资料，不连接发布者服务器，也不自带外部生成服务、账号或额度；是否调用宿主可用的图像或视频工具，由用户请求和宿主权限决定。",
-    "developerName": "幻星文化",
+    "developerName": "怕冷的阿钰",
     "category": "Creativity",
     "capabilities": [
       "剧本通读与开拍筹备",
