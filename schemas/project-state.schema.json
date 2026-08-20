@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huanxing.example/schemas/yi-project-state-v1.json",
+  "$id": "https://yi-director.example/schemas/yi-project-state-v1.json",
   "title": "以一项目状态",
   "type": "object",
   "required": ["schema_version", "revision", "project_id", "project", "updated_at", "long_term", "entities", "HANDOFF"],

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://huanxing.example/schemas/yi-wei-report-v1.json",
+  "$id": "https://yi-director.example/schemas/yi-wei-report-v1.json",
   "title": "薇独立首轮冻结报告",
   "type": "object",
   "required": [

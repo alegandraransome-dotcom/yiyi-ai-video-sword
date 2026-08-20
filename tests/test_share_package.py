@@ -22,6 +22,7 @@ class SharePackageTests(unittest.TestCase):
     def test_public_attribution_is_consistent(self) -> None:
         expected = "怕冷的阿钰"
         retired = "幻" + "星文化"
+        retired_namespace = "huan" + "xing.example"
         manifest = json.loads(
             (PLUGIN / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
         )
@@ -42,6 +43,10 @@ class SharePackageTests(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             self.assertIn(expected, text, path)
             self.assertNotIn(retired, text, path)
+
+        for path in (ROOT / "schemas").glob("*.schema.json"):
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn(retired_namespace, text, path)
 
     def test_versions_are_consistent(self) -> None:
         manifest = json.loads(
